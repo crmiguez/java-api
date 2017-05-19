@@ -10,27 +10,18 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import com.eixox.data.text.FixedLengthAspect;
+import com.eixox.models.bmf.Pregao;
 
 public class SerieHistoricaParser {
 
 	public static final FixedLengthAspect<SerieHistoricaHeader> HEADER_ASPECT = new FixedLengthAspect<SerieHistoricaHeader>(
 			SerieHistoricaHeader.class);
 
-	public static final FixedLengthAspect<SerieHistorica> ITEM_ASPECT = new FixedLengthAspect<SerieHistorica>(
-			SerieHistorica.class);
+	public static final FixedLengthAspect<Pregao> ITEM_ASPECT = new FixedLengthAspect<Pregao>(
+			Pregao.class);
 
 	public static final FixedLengthAspect<SerieHistoricaTrailer> TRAILER_ASPECT = new FixedLengthAspect<SerieHistoricaTrailer>(
 			SerieHistoricaTrailer.class);
-
-	public void accept(String fileName, SerieHistoricaVisitor visitor) throws IOException {
-		FileInputStream fis = new FileInputStream(fileName);
-		try {
-			accept(fis, visitor);
-		} finally {
-			fis.close();
-		}
-
-	}
 
 	public void accept(InputStream in, SerieHistoricaVisitor visitor) throws IOException {
 		InputStreamReader is = new InputStreamReader(in);
@@ -44,7 +35,7 @@ public class SerieHistoricaParser {
 				visitor.visitHeader(header);
 				break;
 			case 1:// item
-				SerieHistorica item = ITEM_ASPECT.parse(l);
+				Pregao item = ITEM_ASPECT.parse(l);
 				visitor.visitItem(item);
 				break;
 			case 99:// trailer
@@ -56,6 +47,16 @@ public class SerieHistoricaParser {
 			}
 			l = reader.readLine();
 		}
+	}
+
+	public void accept(String fileName, SerieHistoricaVisitor visitor) throws IOException {
+		FileInputStream fis = new FileInputStream(fileName);
+		try {
+			accept(fis, visitor);
+		} finally {
+			fis.close();
+		}
+
 	}
 
 	public void acceptZip(InputStream in, SerieHistoricaVisitor visitor) throws IOException {

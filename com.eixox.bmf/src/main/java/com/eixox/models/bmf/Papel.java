@@ -1,6 +1,8 @@
 package com.eixox.models.bmf;
 
-import com.eixox.data.Identity;
+import java.util.Date;
+
+import com.eixox.data.CompositeKey;
 import com.eixox.data.sql.DatabaseColumn;
 import com.eixox.data.sql.DatabaseTable;
 
@@ -8,14 +10,48 @@ import com.eixox.data.sql.DatabaseTable;
 public class Papel {
 
 	@DatabaseColumn
-	@Identity
-	public int id;
+	@CompositeKey
+	public int mercado_id;
 
 	@DatabaseColumn
+	@CompositeKey
 	public String ticker;
 
 	@DatabaseColumn
-	public String isin;
+	public Date data_pregao_max;
+
+	@DatabaseColumn
+	public Date data_pregao_min;
+
+	@DatabaseColumn
+	public int num_negocios_min;
+
+	@DatabaseColumn
+	public int num_negocios_max;
+
+	@DatabaseColumn
+	public double num_negocios_avg;
+
+	@DatabaseColumn
+	public double preco_ultimo_avg;
+
+	@DatabaseColumn
+	public double preco_ultimo_min;
+
+	@DatabaseColumn
+	public double preco_ultimo_max;
+
+	@DatabaseColumn
+	public double variacao_pct_min;
+
+	@DatabaseColumn
+	public double variacao_pct_avg;
+
+	@DatabaseColumn
+	public double variacao_pct_max;
+
+	@DatabaseColumn
+	public int pregao_count;
 
 	@DatabaseColumn
 	public String emissor;

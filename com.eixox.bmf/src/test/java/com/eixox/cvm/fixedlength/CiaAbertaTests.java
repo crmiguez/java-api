@@ -7,7 +7,7 @@ import java.util.UUID;
 
 import org.junit.Test;
 
-import com.eixox.models.bmf.CiaAberta;
+import com.eixox.models.cvm.fixedlength.CiaAbertaTsv;
 import com.eixox.usecases.UsecaseExecution;
 import com.eixox.usecases.cvm.arquivamento.ConsultaItrDfpIan;
 import com.eixox.usecases.cvm.ciaaberta.SelfUpdate;
@@ -20,7 +20,7 @@ public class CiaAbertaTests {
 	public void testReadFile() throws IOException {
 
 		ObjectMapper mapper = new ObjectMapper();
-		for (CiaAberta cia : new SelfUpdate().execute(null, null, (UUID) null).result)
+		for (CiaAbertaTsv cia : new SelfUpdate().execute(null, null, (UUID) null).result)
 			System.out.println(mapper.writeValueAsString(cia));
 
 	}
@@ -37,6 +37,13 @@ public class CiaAbertaTests {
 		UsecaseExecution<List<ConsultaItrDfpIan.ResponseItem>> execute = usecase.execute(null, null, (UUID) null);
 		for (ConsultaItrDfpIan.ResponseItem item : execute.result)
 			System.out.println(mapper.writeValueAsString(item));
+	}
+
+	@Test
+	public void testSelfUpdate() {
+		SelfUpdate usecase = new SelfUpdate();
+		UsecaseExecution<List<CiaAbertaTsv>> execution = usecase.execute("127.0.0.1", "junit", (UUID) null);
+		System.out.println(execution.resultType + ": " + execution.message);
 	}
 
 }

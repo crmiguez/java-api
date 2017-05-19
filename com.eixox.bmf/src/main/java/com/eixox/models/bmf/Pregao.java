@@ -1,4 +1,4 @@
-package com.eixox.models.bmf.fixedlength;
+package com.eixox.models.bmf;
 
 import java.util.Date;
 
@@ -6,6 +6,7 @@ import com.eixox.adapters.DateYmdAdapter;
 import com.eixox.adapters.DoubleDiv1000000Adapter;
 import com.eixox.adapters.DoubleDiv100Adapter;
 import com.eixox.adapters.UseAdapter;
+import com.eixox.data.Identity;
 import com.eixox.data.sql.DatabaseColumn;
 import com.eixox.data.sql.DatabaseTable;
 import com.eixox.data.text.FixedLength;
@@ -16,8 +17,8 @@ import com.eixox.data.text.FixedLength;
  * @author Rodrigo Portela
  *
  */
-@DatabaseTable("tmp_cotahist")
-public class SerieHistorica {
+@DatabaseTable("pregao")
+public class Pregao {
 
 	/**
 	 * DATA DO PREGÃO FORMATO “AAAAMMDD” N(08) 03 10
@@ -45,7 +46,7 @@ public class SerieHistorica {
 	 */
 	@FixedLength(start = 24, end = 27)
 	@DatabaseColumn
-	public int tipo_mercado_id;
+	public int mercado_id;
 	/**
 	 * NOMRES - NOME RESUMIDO DA EMPRESA EMISSORA DO PAPEL X(12) 28 39
 	 */
@@ -200,5 +201,16 @@ public class SerieHistorica {
 	@FixedLength(start = 242, end = 245)
 	@DatabaseColumn
 	public int distribuicao;
+
+
+	@DatabaseColumn
+	public double variacao;
+
+	@DatabaseColumn
+	public double variacao_pct;
+
+	@DatabaseColumn
+	public Date data_pregao_anterior;
+	
 
 }

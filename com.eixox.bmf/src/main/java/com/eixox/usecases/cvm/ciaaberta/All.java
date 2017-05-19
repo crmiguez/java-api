@@ -21,8 +21,11 @@ public class All extends UsecaseImplementation<List<CiaAberta>> {
 	protected void executeFlow(UsecaseExecution<List<CiaAberta>> execution) throws Exception {
 
 		DataSelect<CiaAberta> select = CiaAberta.DB.select();
-		if (page_size > 0)
-			select.page(page_size, page);
+
+		if (page_size == 0)
+			page_size = 100;
+
+		select.page(page_size, page);
 
 		execution.result = select.toList();
 		execution.resultType = UsecaseResultType.SUCCESS;

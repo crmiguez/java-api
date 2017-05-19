@@ -2,35 +2,49 @@ package com.eixox.usecases.bmf.papel;
 
 import java.util.List;
 
+import com.eixox.Control;
 import com.eixox.data.DataSelect;
+import com.eixox.data.FilterComparison;
 import com.eixox.models.bmf.Papel;
-import com.eixox.usecases.Unregistered;
+import com.eixox.restrictions.Required;
 import com.eixox.usecases.UsecaseExecution;
 import com.eixox.usecases.UsecaseImplementation;
 import com.eixox.usecases.UsecaseResultType;
 
-@Unregistered
 public class All extends UsecaseImplementation<List<Papel>> {
 
-	@Override
-	protected boolean acceptMethod(String method) {
-		return "get".equalsIgnoreCase(method) || super.acceptMethod(method);
-	}
+	@Control
+	public int page_size;
 
-	@Override
-	protected void log(UsecaseExecution<List<Papel>> execution) {
-		// don't log
-	}
+	@Control
+	public int page;
+
+	@Control
+	public String filter;
+
+	@Control
+	@Required
+	public int mercado_id;
 
 	@Override
 	protected boolean authenticate(UsecaseExecution<List<Papel>> execution) {
-		// don't authenticate;
 		return true;
 	}
 
 	@Override
 	protected void executeFlow(UsecaseExecution<List<Papel>> execution) throws Exception {
-		DataSelect<Papel> select = Papel.DB.select().setLimit(100);
+
+		if (page_size == 0)
+			page_size = 24;
+
+		DataSelect<Papel> select = Papel.DB
+				.select()
+				.where("mercado_id", mercado_id)
+				.page(page_size, page);
+
+		if (filter != null && !filter.isEmpty())
+			select.andWhere("ticker", FilterComparison.LIKE, filter + "%");
+
 		execution.result = select.toList();
 		execution.resultType = UsecaseResultType.SUCCESS;
 	}

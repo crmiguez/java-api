@@ -4,11 +4,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import com.eixox.Control;
 import com.eixox.HttpClient;
-import com.eixox.Pair;
 import com.eixox.usecases.UsecaseExecution;
 import com.eixox.usecases.UsecaseImplementation;
 import com.eixox.usecases.UsecaseResultType;
@@ -28,7 +28,6 @@ public class ConsultaItrDfpIan extends UsecaseImplementation<List<ConsultaItrDfp
 	@Control
 	public Date data_fim;
 
-	@SuppressWarnings("unchecked")
 	@Override
 	protected void executeFlow(UsecaseExecution<List<ResponseItem>> execution) throws Exception {
 
@@ -43,15 +42,22 @@ public class ConsultaItrDfpIan extends UsecaseImplementation<List<ConsultaItrDfp
 		String st_data_ini = dateFormat.format(data_ini);
 		String st_data_fim = dateFormat.format(data_fim);
 
-		client.open("POST", "http://siteempresas.bovespa.com.br/consbov/ListaEmpresaPeriodoItr.asp?busca=data&site=C&pregao=",
-				new Pair<String, String>("hdnPagina", "Empresa"),
-				new Pair<String, String>("ccvm", ""),
-				new Pair<String, String>("razao", ""),
-				new Pair<String, String>("mercado", ""),
-				new Pair<String, String>("TipoArquivo", ""),
-				new Pair<String, String>("fechaI", st_data_ini),
-				new Pair<String, String>("fechaV", st_data_fim));
+		LinkedHashMap<String, String> postData = new LinkedHashMap<String, String>();
 
+		client
+				.setMethod("POST")
+				.setUrl("http://siteempresas.bovespa.com.br/consbov/ListaEmpresaPeriodoItr.asp?busca=data&site=C&pregao=");
+
+		postData.put("hdnPagina", "Empresa");
+		postData.put("ccvm", "");
+		postData.put("razao", "");
+		postData.put("mercado", "");
+		postData.put("TipoArquivo", "");
+		postData.put("fechaI", st_data_ini);
+		postData.put("fechaV", st_data_fim);
+
+		client.setBody(postData);
+		client.connect();
 		String remote_content = client.downloadString();
 		client.close();
 
@@ -88,7 +94,7 @@ public class ConsultaItrDfpIan extends UsecaseImplementation<List<ConsultaItrDfp
 				String[] spl = match.split("'");
 				this.item = new ResponseItem();
 				item.razao_social = spl[1];
-				item.nome_pregao = spl[3];
+				item.nome_pregao = spl[3].trim();
 				item.codigo_cvm = Integer.parseInt(spl[5]);
 				item.mercado = Integer.parseInt(spl[7]);
 				item.cnpj = Long.parseLong(spl[9]);

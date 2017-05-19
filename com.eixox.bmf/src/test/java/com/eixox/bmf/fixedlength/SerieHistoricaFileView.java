@@ -5,7 +5,7 @@ import java.io.IOException;
 
 import org.junit.Test;
 
-import com.eixox.models.bmf.fixedlength.SerieHistorica;
+import com.eixox.models.bmf.Pregao;
 import com.eixox.models.bmf.fixedlength.SerieHistoricaHeader;
 import com.eixox.models.bmf.fixedlength.SerieHistoricaParser;
 import com.eixox.models.bmf.fixedlength.SerieHistoricaTrailer;
@@ -13,7 +13,7 @@ import com.eixox.models.bmf.fixedlength.SerieHistoricaVisitor;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class SerieHistoricaTests {
+public class SerieHistoricaFileView {
 
 	@Test
 	public void testSerieHistorica() throws FileNotFoundException, IOException {
@@ -32,7 +32,7 @@ public class SerieHistoricaTests {
 				}
 			}
 
-			public void visitItem(SerieHistorica item) {
+			public void visitItem(Pregao item) {
 				try {
 					System.out.println(mapper.writeValueAsString(item));
 				} catch (JsonProcessingException e) {
@@ -68,7 +68,7 @@ public class SerieHistoricaTests {
 				}
 			}
 
-			public void visitItem(SerieHistorica item) {
+			public void visitItem(Pregao item) {
 				try {
 					System.out.println(mapper.writeValueAsString(item));
 				} catch (JsonProcessingException e) {
