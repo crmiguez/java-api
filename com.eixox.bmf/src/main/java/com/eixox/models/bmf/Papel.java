@@ -3,6 +3,7 @@ package com.eixox.models.bmf;
 import java.util.Date;
 
 import com.eixox.data.CompositeKey;
+import com.eixox.data.Identity;
 import com.eixox.data.sql.DatabaseColumn;
 import com.eixox.data.sql.DatabaseTable;
 
@@ -10,12 +11,20 @@ import com.eixox.data.sql.DatabaseTable;
 public class Papel {
 
 	@DatabaseColumn
+	@Identity
+	public int id;
+	
+	@DatabaseColumn
 	@CompositeKey
 	public int mercado_id;
 
 	@DatabaseColumn
 	@CompositeKey
 	public String ticker;
+	
+	@DatabaseColumn
+	@CompositeKey
+	public int prazo_dias;
 
 	@DatabaseColumn
 	public Date data_pregao_max;

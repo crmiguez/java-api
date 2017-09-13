@@ -2,33 +2,31 @@ package com.eixox.usecases.cvm.ciaaberta;
 
 import java.util.List;
 
-import com.eixox.Control;
 import com.eixox.data.DataSelect;
 import com.eixox.models.bmf.CiaAberta;
 import com.eixox.usecases.UsecaseExecution;
 import com.eixox.usecases.UsecaseImplementation;
 import com.eixox.usecases.UsecaseResultType;
 
-public class All extends UsecaseImplementation<List<CiaAberta>> {
+public class All extends UsecaseImplementation<All.Parameters, List<CiaAberta>> {
 
-	@Control
-	public int page;
+	public static class Parameters {
+		public int page;
 
-	@Control
-	public int page_size;
+		public int page_size;
+	}
 
 	@Override
-	protected void executeFlow(UsecaseExecution<List<CiaAberta>> execution) throws Exception {
-
+	protected void mainFlow(UsecaseExecution<Parameters, List<CiaAberta>> execution) throws Exception {
 		DataSelect<CiaAberta> select = CiaAberta.DB.select();
 
-		if (page_size == 0)
-			page_size = 100;
+		if (execution.params.page_size == 0)
+			execution.params.page_size = 100;
 
-		select.page(page_size, page);
+		select.page(execution.params.page_size, execution.params.page);
 
 		execution.result = select.toList();
-		execution.resultType = UsecaseResultType.SUCCESS;
+		execution.result_type = UsecaseResultType.SUCCESS;
 
 	}
 

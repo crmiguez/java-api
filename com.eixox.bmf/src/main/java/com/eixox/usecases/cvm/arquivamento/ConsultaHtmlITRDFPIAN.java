@@ -7,69 +7,20 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import com.eixox.Control;
 import com.eixox.HttpClient;
 import com.eixox.usecases.UsecaseExecution;
 import com.eixox.usecases.UsecaseImplementation;
 import com.eixox.usecases.UsecaseResultType;
 
-public class ConsultaItrDfpIan extends UsecaseImplementation<List<ConsultaItrDfpIan.ResponseItem>> {
+public class ConsultaHtmlITRDFPIAN extends UsecaseImplementation<ConsultaHtmlITRDFPIAN.Parameters, List<ConsultaHtmlITRDFPIAN.ResponseItem>> {
 
 	private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
-	@Override
-	protected boolean authenticate(UsecaseExecution<List<ResponseItem>> execution) {
-		return true;
-	}
+	public static class Parameters {
 
-	@Control
-	public Date data_ini;
+		public Date data_ini;
 
-	@Control
-	public Date data_fim;
-
-	@Override
-	protected void executeFlow(UsecaseExecution<List<ResponseItem>> execution) throws Exception {
-
-		if (data_fim == null)
-			data_fim = new Date();
-
-		if (data_ini == null)
-			data_ini = new Date();
-
-		HttpClient client = new HttpClient();
-
-		String st_data_ini = dateFormat.format(data_ini);
-		String st_data_fim = dateFormat.format(data_fim);
-
-		LinkedHashMap<String, String> postData = new LinkedHashMap<String, String>();
-
-		client
-				.setMethod("POST")
-				.setUrl("http://siteempresas.bovespa.com.br/consbov/ListaEmpresaPeriodoItr.asp?busca=data&site=C&pregao=");
-
-		postData.put("hdnPagina", "Empresa");
-		postData.put("ccvm", "");
-		postData.put("razao", "");
-		postData.put("mercado", "");
-		postData.put("TipoArquivo", "");
-		postData.put("fechaI", st_data_ini);
-		postData.put("fechaV", st_data_fim);
-
-		client.setBody(postData);
-		client.connect();
-		String remote_content = client.downloadString();
-		client.close();
-
-		// debug: System.out.println(remote_content);
-
-		Iterator<ResponseItem> jsMatches = findCompanies(remote_content);
-		execution.result = new ArrayList<ResponseItem>();
-		while (jsMatches.hasNext())
-			execution.result.add(jsMatches.next());
-
-		execution.resultType = UsecaseResultType.SUCCESS;
-
+		public Date data_fim;
 	}
 
 	private Iterator<ResponseItem> findCompanies(final String content) {
@@ -119,6 +70,49 @@ public class ConsultaItrDfpIan extends UsecaseImplementation<List<ConsultaItrDfp
 		public int mercado;
 
 		public long cnpj;
+
+	}
+
+	@Override
+	protected void mainFlow(UsecaseExecution<Parameters, List<ResponseItem>> execution) throws Exception {
+		if (execution.params.data_fim == null)
+			execution.params.data_fim = new Date();
+
+		if (execution.params.data_ini == null)
+			execution.params.data_ini = new Date();
+
+		HttpClient client = new HttpClient();
+
+		String st_data_ini = dateFormat.format(execution.params.data_ini);
+		String st_data_fim = dateFormat.format(execution.params.data_fim);
+
+		LinkedHashMap<String, String> postData = new LinkedHashMap<String, String>();
+
+		client
+				.setMethod("POST")
+				.setUrl("http://siteempresas.bovespa.com.br/consbov/ListaEmpresaPeriodoItr.asp?busca=data&site=C&pregao=");
+
+		postData.put("hdnPagina", "Empresa");
+		postData.put("ccvm", "");
+		postData.put("razao", "");
+		postData.put("mercado", "");
+		postData.put("TipoArquivo", "");
+		postData.put("fechaI", st_data_ini);
+		postData.put("fechaV", st_data_fim);
+
+		client.setBody(postData);
+		client.connect();
+		String remote_content = client.downloadString();
+		client.close();
+
+		// debug: System.out.println(remote_content);
+
+		Iterator<ResponseItem> jsMatches = findCompanies(remote_content);
+		execution.result = new ArrayList<ResponseItem>();
+		while (jsMatches.hasNext())
+			execution.result.add(jsMatches.next());
+
+		execution.result_type = UsecaseResultType.SUCCESS;
 
 	}
 }

@@ -1,4 +1,4 @@
-package com.eixox.models.cvm.fixedlength;
+package com.eixox.models.cvm;
 
 import java.util.Date;
 

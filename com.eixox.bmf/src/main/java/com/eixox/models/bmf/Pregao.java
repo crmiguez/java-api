@@ -20,6 +20,9 @@ import com.eixox.data.text.FixedLength;
 @DatabaseTable("pregao")
 public class Pregao {
 
+	@DatabaseColumn
+	@Identity
+	public int id;
 	/**
 	 * DATA DO PREGÃO FORMATO “AAAAMMDD” N(08) 03 10
 	 */
@@ -202,7 +205,6 @@ public class Pregao {
 	@DatabaseColumn
 	public int distribuicao;
 
-
 	@DatabaseColumn
 	public double variacao;
 
@@ -210,7 +212,6 @@ public class Pregao {
 	public double variacao_pct;
 
 	@DatabaseColumn
-	public Date data_pregao_anterior;
-	
+	public int id_anterior;
 
 }

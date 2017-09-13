@@ -16,9 +16,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import com.eixox.HttpClient;
-import com.eixox.UUIDHelper;
 import com.eixox.models.bmf.Arquivamento;
-import com.eixox.models.bmf.ArquivamentoAssunto;
 
 public class ConsultaCvm {
 
@@ -42,7 +40,9 @@ public class ConsultaCvm {
 		postData.put("txtData", new SimpleDateFormat("dd/MM/yyyy").format(data));
 		postData.put("txtHora", new SimpleDateFormat("HH:mm").format(data));
 		postData.put("txtDocumento", tipo);
-		postData.put("txtAssuntoIPE", incluirAssuntoIPE ? "SIM" : "NÃO");
+		postData.put("txtAssuntoIPE", incluirAssuntoIPE ?
+				"SIM" :
+				"NÃO");
 
 		HttpClient client = new HttpClient();
 
@@ -69,16 +69,6 @@ public class ConsultaCvm {
 			for (int i = 0; i < size; i++) {
 				Arquivamento item = new Arquivamento((Element) links.item(i), dataConsulta);
 				this.response_items.add(item);
-
-				if (!Arquivamento.DB.select().where("url", item.url).exists()) {
-					item.id = UUIDHelper.generateTimebased();
-					Arquivamento.DB.insert(item);
-					if (item.assuntos != null)
-						for (ArquivamentoAssunto aa : item.assuntos) {
-							aa.id = item.id;
-							ArquivamentoAssunto.DB.insert(aa);
-						}
-				}
 			}
 		}
 

@@ -53,7 +53,7 @@ public class SerieHistoricaFileView {
 
 	@Test
 	public void testSerieHistoricaZip() throws FileNotFoundException, IOException {
-		String fileName = "C:\\Users\\Rodrigo Portela\\Documents\\BOVESPA\\COTAHIST_D04042016.ZIP";
+		String fileName = "C:\\SourceCode\\GitHub\rportela\\bovespa-data\\SerieHistorica\\COTAHIST_A2017.ZIP";
 		SerieHistoricaParser serieHistorica = new SerieHistoricaParser();
 
 		serieHistorica.acceptZip(fileName, new SerieHistoricaVisitor() {

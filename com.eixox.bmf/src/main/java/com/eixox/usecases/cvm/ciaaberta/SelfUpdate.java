@@ -12,21 +12,15 @@ import com.eixox.data.text.TextReader;
 import com.eixox.models.bmf.CiaAberta;
 import com.eixox.models.bmf.CiaAbertaEndereco;
 import com.eixox.models.bmf.CiaAbertaResponsavel;
-import com.eixox.models.cvm.fixedlength.CiaAbertaTsv;
+import com.eixox.models.cvm.CiaAbertaTsv;
 import com.eixox.usecases.UsecaseExecution;
 import com.eixox.usecases.UsecaseImplementation;
 import com.eixox.usecases.UsecaseResultType;
 
-public class SelfUpdate extends UsecaseImplementation<List<CiaAbertaTsv>> {
+public class SelfUpdate extends UsecaseImplementation<Void, List<CiaAbertaTsv>> {
 
 	@Override
-	protected boolean authenticate(UsecaseExecution<List<CiaAbertaTsv>> execution) {
-		return true;
-	}
-
-	@Override
-	protected void executeFlow(UsecaseExecution<List<CiaAbertaTsv>> execution) throws Exception {
-
+	protected void mainFlow(UsecaseExecution<Void, List<CiaAbertaTsv>> execution) throws Exception {
 		URL url = new URL("http://sistemas.cvm.gov.br/cadastro/SPW_CIA_ABERTA.ZIP");
 		CsvAspect<CiaAbertaTsv> aspect = new CsvAspect<CiaAbertaTsv>(CiaAbertaTsv.class);
 		aspect.first_row_has_names = true;
@@ -35,7 +29,7 @@ public class SelfUpdate extends UsecaseImplementation<List<CiaAbertaTsv>> {
 		zis.getNextEntry();
 		TextReader<CiaAbertaTsv> reader = new TextReader<CiaAbertaTsv>(aspect, zis, Charset.forName("iso-8859-1"));
 
-		execution.resultType = UsecaseResultType.SUCCESS;
+		execution.result_type = UsecaseResultType.SUCCESS;
 		execution.result = new ArrayList<CiaAbertaTsv>();
 
 		try {
@@ -70,7 +64,9 @@ public class SelfUpdate extends UsecaseImplementation<List<CiaAbertaTsv>> {
 					end.complemento = item.endereco_complemento;
 					end.email = item.email;
 					end.fax = item.fax;
-					end.label = item.endereco_tipo == null || item.endereco_tipo.isEmpty() ? "Sede" : "";
+					end.label = item.endereco_tipo == null || item.endereco_tipo.isEmpty() ?
+							"Sede" :
+							"";
 					end.logradouro = item.endereco_logradouro;
 					end.pais = item.endereco_pais;
 					end.telefone = item.telefone;
@@ -92,7 +88,9 @@ public class SelfUpdate extends UsecaseImplementation<List<CiaAbertaTsv>> {
 					resp.nome = item.responsavel_nome;
 					resp.pais = item.responsavel_endereco_pais;
 					resp.telefone = item.responsavel_telefone;
-					resp.tipo = item.responsavel_tipo == null || item.responsavel_tipo.isEmpty() ? "Responsável" : item.responsavel_tipo;
+					resp.tipo = item.responsavel_tipo == null || item.responsavel_tipo.isEmpty() ?
+							"Responsável" :
+							item.responsavel_tipo;
 					resp.uf = item.responsavel_endereco_uf;
 					CiaAbertaResponsavel.DB.save(resp);
 				}

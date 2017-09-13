@@ -7,8 +7,8 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.eixox</groupId>
-			<artifactId>com.eixox</artifactId>
-			<version>2.0-ALPHA</version>
+			<artifactId>jetfuel</artifactId>
+			<version>3.0</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
 		<dependency>
@@ -22,11 +22,10 @@
 			<artifactId>postgresql</artifactId>
 			<version>9.1-901-1.jdbc4</version>
 		</dependency>
-
 		<dependency>
 			<groupId>com.eixox</groupId>
-			<artifactId>com.eixox.profiler</artifactId>
-			<version>1.0-ALPHA</version>
+			<artifactId>api-profiler</artifactId>
+			<version>2.0</version>
 		</dependency>
 	</dependencies>
 </project>
